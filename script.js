@@ -40,7 +40,7 @@ function generatePassword() {
       }
       this.initialized = false;
       while ( (this.passWord.length < minLen) || !complexEnough ) {
-        console.log("passWord.length"+this.passWord.length);
+        //console.log("passWord.length="+this.passWord.length);
         //DEBUG by uncommenting: if (confirm("Stop early?")) { break; }
         //First random number decides from which group to get the next
         //character added to the password.  Prioritize lower case but
@@ -63,7 +63,7 @@ function generatePassword() {
           this.passWord += this.lower[this.getRand(this.lower.length)];
           break;
         }
-        console.log("WIP password="+this.passWord);
+        //console.log("WIP password="+this.passWord);
       }
     }
   }
