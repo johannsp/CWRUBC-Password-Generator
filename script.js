@@ -8,30 +8,30 @@ var generateBtn = document.querySelector("#generate");
 function generatePassword() {
 
   var buildPassword = {
-    var lower =
+    lower:
       ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-       'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    var upper =
+       'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
+    upper:
       ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-       'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-    var punct =
-      ['~', '!', '#', '$', '%', '^', '*', '-', '+', '.', ',', ':', ';'];
-    initialized: false;
-    passWord: "";
-    hasUpper: false;
-    hasPunct: false;
-    function BuildPassword(startPass, needUpper, needPunct) {
+       'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+    punct:
+      ['~', '!', '#', '$', '%', '^', '*', '-', '+', '.', ',', ':', ';'],
+    initialized: false,
+    passWord: "",
+    hasUpper: false,
+    hasPunct: false,
+    BuildPassword: function(startPass, needUpper, needPunct) {
       this.initialized = true;
       this.passWord = startPass;
       //Note reversal of boolean parameters, so pass in whether
       //this character type is required not if it is present!
       this.hasUpper = !needUpper;
       this.hasPunct = !needPunct;
-    }
-    function getRand(rangeFromZero) {
-      return Math.floor(Math.random * rangeFromZero);
-    }
-    function getPassword(minLen) {
+    },
+    getRand: function(rangeFromZero) {
+      return Math.floor(Math.random() * rangeFromZero);
+    },
+    getPassword: function(minLen) {
       var complexEnough = false;
       //For future reuseability initialize internal fields unless this step was
       //already performed.
@@ -39,14 +39,16 @@ function generatePassword() {
         this.BuildPassword("", true, true);
       }
       this.initialized = false;
-      while ( (this.passWord.length() < minLen) && !complexEnough ) {
+      while ( (this.passWord.length < minLen) || !complexEnough ) {
+        console.log("passWord.length"+this.passWord.length);
+        //DEBUG by uncommenting: if (confirm("Stop early?")) { break; }
         //First random number decides from which group to get the next
         //character added to the password.  Prioritize lower case but
         //require an upper case letter and a punctuation character.
         //Second random number decides which character from group
         //will be added from the chosen group.
         //Track when the password is complex enough and long enough.
-        switch (this.getRand(5)) {
+        switch (this.getRand(10)) {
         case 0:
           this.passWord += this.upper[this.getRand(this.upper.length)];
           this.hasUpper = true;
@@ -61,6 +63,7 @@ function generatePassword() {
           this.passWord += this.lower[this.getRand(this.lower.length)];
           break;
         }
+        console.log("WIP password="+this.passWord);
       }
     }
   }
