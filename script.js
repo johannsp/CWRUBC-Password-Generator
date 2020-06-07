@@ -20,7 +20,7 @@ function generatePassword() {
     passWord: "";
     hasUpper: false;
     hasPunct: false;
-    function BuildPassword(startPass, needUpper, needPunct)
+    function BuildPassword(startPass, needUpper, needPunct) {
       this.initialized = true;
       this.passWord = startPass;
       //Note reversal of boolean parameters, so pass in whether
@@ -39,14 +39,14 @@ function generatePassword() {
         this.BuildPassword("", true, true);
       }
       this.initialized = false;
-      while ( (this.passWord.length() < minLen) && !complexEnough) ) {
+      while ( (this.passWord.length() < minLen) && !complexEnough ) {
         //First random number decides from which group to get the next
         //character added to the password.  Prioritize lower case but
         //require an upper case letter and a punctuation character.
         //Second random number decides which character from group
         //will be added from the chosen group.
         //Track when the password is complex enough and long enough.
-        switch (this.getRand(5) {
+        switch (this.getRand(5)) {
         case 0:
           this.passWord += this.upper[this.getRand(this.upper.length)];
           this.hasUpper = true;
@@ -60,6 +60,7 @@ function generatePassword() {
         default:
           this.passWord += this.lower[this.getRand(this.lower.length)];
           break;
+        }
       }
     }
   }
