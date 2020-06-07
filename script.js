@@ -40,7 +40,7 @@ function generatePassword() {
       //For future reuseability initialize internal fields unless this step was
       //already performed.
       if (!this.initialized) {
-        this.BuildPassword("", true, true);
+        this.BuildPassword("", true, true, true);
       }
       this.initialized = false;
       //Unless maximum password length has been reached continue
