@@ -13,5 +13,6 @@ to compute an acceptable password.
 Assumed user critera for an acceptable password include
 - Minimum length of 8 characters
 - Require at least one upper case letter
+- Require at least one digit
 - Require at least one punctuation type special character
 - Enforce maximum password length of 128 characters
