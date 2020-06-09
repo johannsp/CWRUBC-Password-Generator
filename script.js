@@ -20,17 +20,17 @@ function generatePassword() {
       ['~', '!', '#', '$', '%', '^', '*', '-', '+', '.', ',', ':', ';'],
     initialized: false,
     passWord: "",
-    hasUpper: false,
-    hasDigit: false,
-    hasPunct: false,
+    metUpper: false,
+    metDigit: false,
+    metPunct: false,
     BuildPassword: function(startPass, needUpper, needDigit, needPunct) {
       this.initialized = true;
       this.passWord = startPass;
       //Note reversal of boolean parameters, so pass in whether
       //this character type is required not if it is present!
-      this.hasUpper = !needUpper;
-      this.hasDigit = !needDigit;
-      this.hasPunct = !needPunct;
+      this.metUpper = !needUpper;
+      this.metDigit = !needDigit;
+      this.metPunct = !needPunct;
     },
     getRand: function(rangeFromZero) {
       return Math.floor(Math.random() * rangeFromZero);
@@ -64,18 +64,18 @@ function generatePassword() {
         switch (this.getRand(10)) {
         case 0:
           this.passWord += this.upper[this.getRand(this.upper.length)];
-          this.hasUpper = true;
-          complexEnough = this.hasUpper && this.hasDigit && this.hasPunct; 
+          this.metUpper = true;
+          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
           break;
         case 1:
           this.passWord += this.digit[this.getRand(this.digit.length)];
-          this.hasDigit = true;
-          complexEnough = this.hasUpper && this.hasDigit && this.hasPunct; 
+          this.metDigit = true;
+          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
           break;
         case 2:
           this.passWord += this.punct[this.getRand(this.punct.length)];
-          this.hasPunct = true;
-          complexEnough = this.hasUpper && this.hasDigit && this.hasPunct; 
+          this.metPunct = true;
+          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
           break;
         default:
           this.passWord += this.lower[this.getRand(this.lower.length)];
@@ -85,7 +85,17 @@ function generatePassword() {
       }
     }
   }
-  buildPassword.getPassword(8,128);
+
+  
+  do {
+    pLen = parseInt(prompt("Password length 8 up to 128 characters"),10);
+  }
+  while (isNaN(pLen) || (pLen < 8) || (pLen > 128));
+  var needU = confirm("Should have at least one upper case letter.");
+  var needD = confirm("Should have at least one digit.");
+  var needP = confirm("Should have at least one punctuation character.");
+  buildPassword.BuildPassword("", needU, needD, needP);
+  buildPassword.getPassword(pLen,128);
   return buildPassword.passWord;
 }
 
