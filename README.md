@@ -10,9 +10,9 @@ Preview:
 On each click of "Generate Password" button Javascript function will be called
 to compute an acceptable password.
 
-Assumed user critera for an acceptable password include
-- Minimum length of 8 characters
-- Require at least one upper case letter
-- Require at least one digit
-- Require at least one punctuation type special character
+User critera for an acceptable password include
+- Specify minimum password length between 8 and 128
 - Enforce maximum password length of 128 characters
+- Whether to require at least one upper case letter
+- Whether to require at least one digit
+- Whether to require at least one punctuation type special character
