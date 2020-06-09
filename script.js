@@ -35,7 +35,7 @@ function generatePassword() {
     getRand: function(rangeFromZero) {
       return Math.floor(Math.random() * rangeFromZero);
     },
-    getPassword: function(minLen, maxLen) {
+    getPassword: function(passLen) {
       var complexEnough = false;
       //For future reuseability initialize internal fields unless this step was
       //already performed.
@@ -49,9 +49,7 @@ function generatePassword() {
       //Note that lower case letters are more likely to be added
       //than upper case letters or punctuation, but an extremely
       //long password is very unlikely.
-      while ( (this.passWord.length < minLen) ||
-              !complexEnough &&
-              (this.passWord.length < maxLen) ) {
+      while (this.passWord.length < passLen) {
         //console.log("passWord.length="+this.passWord.length);
         //DEBUG by uncommenting:
         //if (confirm("Password="+this.passWord+"\nStop early?")) { break; }
@@ -81,7 +79,40 @@ function generatePassword() {
           this.passWord += this.lower[this.getRand(this.lower.length)];
           break;
         }
-        //console.log("WIP password="+this.passWord);
+        console.log("WIP password="+this.passWord);
+      }
+      //If and only if the password length was generated without meeting all
+      //user requested criteria for non lower case letters, create a block
+      //scope variables for a character array copy of the string and an index
+      //into it.  Loop until the complex enough requirement is met, generating
+      //a random location in the password and if it currently holds a lower
+      //case letter, replace that with the next required special character.
+      if (!complexEnough) {
+        let i = 0;
+        let pArr = this.passWord.split("");
+        do {
+          i = this.getRand(passLen);
+          if (this.lower.indexOf(pArr[i], 0) > 0) {
+            if (!this.metUpper) {
+              pArr[i] = this.upper[this.getRand(this.upper.length)];
+              this.metUpper = true;
+            } 
+            else if (!this.metDigit) {
+              pArr[i] = this.digit[this.getRand(this.digit.length)];
+              this.metDigit = true;
+            } 
+            else if (!this.metPunct) {
+              pArr[i] = this.punct[this.getRand(this.punct.length)];
+              this.metPunct = true;
+            } 
+
+          }
+          console.log("WIP pArr="+pArr.join(""));
+          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
+        }
+        while (!complexEnough);
+        this.passWord = pArr.join("");
+        console.log("Adj password="+this.passWord);
       }
     }
   }
@@ -95,7 +126,7 @@ function generatePassword() {
   var needD = confirm("Should have at least one digit.");
   var needP = confirm("Should have at least one punctuation character.");
   buildPassword.BuildPassword("", needU, needD, needP);
-  buildPassword.getPassword(pLen,128);
+  buildPassword.getPassword(pLen);
   return buildPassword.passWord;
 }
 
