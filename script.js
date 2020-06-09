@@ -50,9 +50,6 @@ function generatePassword() {
       //than upper case letters or punctuation, but an extremely
       //long password is very unlikely.
       while (this.passWord.length < passLen) {
-        //console.log("passWord.length="+this.passWord.length);
-        //DEBUG by uncommenting:
-        //if (confirm("Password="+this.passWord+"\nStop early?")) { break; }
         //First random number decides from which group to get the next
         //character added to the password.  Prioritize lower case but
         //require an upper case letter and a punctuation character.
@@ -79,7 +76,6 @@ function generatePassword() {
           this.passWord += this.lower[this.getRand(this.lower.length)];
           break;
         }
-        console.log("WIP password="+this.passWord);
       }
       //If and only if the password length was generated without meeting all
       //user requested criteria for non lower case letters, create a block
@@ -107,12 +103,10 @@ function generatePassword() {
             } 
 
           }
-          console.log("WIP pArr="+pArr.join(""));
           complexEnough = this.metUpper && this.metDigit && this.metPunct; 
         }
         while (!complexEnough);
         this.passWord = pArr.join("");
-        console.log("Adj password="+this.passWord);
       }
     }
   }
