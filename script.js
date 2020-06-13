@@ -18,107 +18,50 @@ function generatePassword() {
       ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
     punct:
       ['~', '!', '#', '$', '%', '^', '*', '-', '+', '.', ',', ':', ';'],
+    included: 
+      [],
     initialized: false,
     passWord: "",
-    metUpper: false,
-    metDigit: false,
-    metPunct: false,
     BuildPassword: function(startPass, needUpper, needDigit, needPunct) {
       this.initialized = true;
       this.passWord = startPass;
-      //Note reversal of boolean parameters, so pass in whether
-      //this character type is required not if it is present!
-      this.metUpper = !needUpper;
-      this.metDigit = !needDigit;
-      this.metPunct = !needPunct;
+      //Build the a single character set by concatenating to the mandatory
+      //lower case letter subset whichever optional special charcter subsets
+      //were selected as need.
+      this.included = this.lower.concat(
+        (needUpper) ? this.upper : [],
+        (needDigit) ? this.digit : [],
+        (needPunct) ? this.punct : [],
+      );
+
     },
     getRand: function(rangeFromZero) {
       return Math.floor(Math.random() * rangeFromZero);
     },
     getPassword: function(passLen) {
-      var complexEnough = false;
       //For future reuseability initialize internal fields unless this step was
       //already performed.
       if (!this.initialized) {
         this.BuildPassword("", true, true, true);
       }
       this.initialized = false;
-      //Unless maximum password length has been reached continue
-      //adding random characters until both the minimum length
-      //and complex enough requrements have been satisfied.
-      //Note that lower case letters are more likely to be added
-      //than upper case letters or punctuation, but an extremely
-      //long password is very unlikely.
+      //Since included property has been built by the constructor with the
+      //proper character set of allowable characters, just loop adding one
+      //random character from included until the desired password length is
+      //achieved.
       while (this.passWord.length < passLen) {
-        //First random number decides from which group to get the next
-        //character added to the password.  Prioritize lower case but
-        //require an upper case letter and a punctuation character.
-        //Second random number decides which character from group
-        //will be added from the chosen group.
-        //Track when the password is complex enough and long enough.
-        switch (this.getRand(10)) {
-        case 0:
-          this.passWord += this.upper[this.getRand(this.upper.length)];
-          this.metUpper = true;
-          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
-          break;
-        case 1:
-          this.passWord += this.digit[this.getRand(this.digit.length)];
-          this.metDigit = true;
-          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
-          break;
-        case 2:
-          this.passWord += this.punct[this.getRand(this.punct.length)];
-          this.metPunct = true;
-          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
-          break;
-        default:
-          this.passWord += this.lower[this.getRand(this.lower.length)];
-          break;
-        }
-      }
-      //If and only if the password length was generated without meeting all
-      //user requested criteria for non lower case letters, create a block
-      //scope variables for a character array copy of the string and an index
-      //into it.  Loop until the complex enough requirement is met, generating
-      //a random location in the password and if it currently holds a lower
-      //case letter, replace that with the next required special character.
-      if (!complexEnough) {
-        let i = 0;
-        let pArr = this.passWord.split("");
-        do {
-          i = this.getRand(passLen);
-          if (this.lower.indexOf(pArr[i], 0) > 0) {
-            if (!this.metUpper) {
-              pArr[i] = this.upper[this.getRand(this.upper.length)];
-              this.metUpper = true;
-            } 
-            else if (!this.metDigit) {
-              pArr[i] = this.digit[this.getRand(this.digit.length)];
-              this.metDigit = true;
-            } 
-            else if (!this.metPunct) {
-              pArr[i] = this.punct[this.getRand(this.punct.length)];
-              this.metPunct = true;
-            } 
-
-          }
-          complexEnough = this.metUpper && this.metDigit && this.metPunct; 
-        }
-        while (!complexEnough);
-        this.passWord = pArr.join("");
+        this.passWord += this.included[this.getRand(this.included.length)];
       }
     }
   }
-
   
   do {
     pLen = parseInt(prompt("Password length 8 up to 128 characters"),10);
   }
   while (isNaN(pLen) || (pLen < 8) || (pLen > 128));
-  var needU = confirm("Should have at least one upper case letter.");
-  var needD = confirm("Should have at least one digit.");
-  var needP = confirm("Should have at least one punctuation character.");
+  var needU = confirm("Can include upper case letters?");
+  var needD = confirm("Can include digits?");
+  var needP = confirm("Can include punctuation characters?");
   buildPassword.BuildPassword("", needU, needD, needP);
   buildPassword.getPassword(pLen);
   return buildPassword.passWord;
