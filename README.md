@@ -14,8 +14,8 @@ All generated passwords contain lower case letters, but the user can choose
 which other special characters may be present.
 
 Unlike the enforceRequirementsVersion branch, the chooseCharsetVersion branch
-logic does not make lower case characters more likely to occur than allowable
-special characters.
+logic does not make lower case characters more likely to occur than the other
+allowable special characters.
 
 User criteria for an acceptable password include
 - Specify minimum password length between 8 and 128
